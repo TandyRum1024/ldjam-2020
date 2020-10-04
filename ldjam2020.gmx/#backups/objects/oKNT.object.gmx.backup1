@@ -1,4 +1,4 @@
-// 2020-10-05 06:34:11
+// 2020-10-05 06:36:53
 #event properties (no comments/etc. here are saved)
 parent_index = -1;
 persistent = true;
@@ -154,6 +154,14 @@ if (transition)
         }
     }
 }
+
+// Update dynamic music
+if (!audio_is_playing(global.soundVolumeMusic1SND)) global.soundVolumeMusic1SND = audio_play_sound(musLv1, 0, true);
+if (!audio_is_playing(global.soundVolumeMusic2SND)) global.soundVolumeMusic2SND = audio_play_sound(musLv2, 0, true);
+if (!audio_is_playing(global.soundVolumeMusic3SND)) global.soundVolumeMusic3SND = audio_play_sound(musLv3, 0, true);
+audio_sound_gain(global.soundVolumeMusic1SND, global.soundVolumeMusic1, 0);
+audio_sound_gain(global.soundVolumeMusic2SND, global.soundVolumeMusic2, 0);
+audio_sound_gain(global.soundVolumeMusic3SND, global.soundVolumeMusic3, 0);
 
 #event step_begin Listen to input
 inputH = keyboard_check(inputKeyRight) - keyboard_check(inputKeyLeft);

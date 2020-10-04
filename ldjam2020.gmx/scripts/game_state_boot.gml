@@ -28,8 +28,8 @@ if (fsmStateInit)
 
 /// Update dynamic music
 global.soundVolumeMusic1 = lerp(global.soundVolumeMusic1, 1.0, 0.1);
-global.soundVolumeMusic2 = lerp(global.soundVolumeMusic2, 1.0, 0.1);
-global.soundVolumeMusic3 = lerp(global.soundVolumeMusic3, 1.0, 0.1);
+global.soundVolumeMusic2 = lerp(global.soundVolumeMusic2, 0.0, 0.1);
+global.soundVolumeMusic3 = lerp(global.soundVolumeMusic3, 0.0, 0.1);
 
 if (!transition)
 {

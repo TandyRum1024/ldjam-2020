@@ -1,4 +1,4 @@
-// 2020-10-05 06:36:53
+// 2020-10-05 06:43:24
 #event properties (no comments/etc. here are saved)
 parent_index = -1;
 persistent = true;
@@ -33,7 +33,7 @@ global.tileToObject = makemap(
 global.phyTimescale = 1;
 
 // Sound & music
-global.soundVolumeMaster = 0.75;
+global.soundVolumeMaster = 0.5;
 
 global.soundVolumeFX = 1.0;
 global.soundVolumeMusic1 = 1.0;

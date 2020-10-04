@@ -1,4 +1,4 @@
-// 2020-10-05 06:34:12
+// 2020-10-05 06:43:24
 #define game_state_boot
 /// oKNT::game_state_boot
 if (fsmStateInit)
@@ -29,8 +29,8 @@ if (fsmStateInit)
 
 /// Update dynamic music
 global.soundVolumeMusic1 = lerp(global.soundVolumeMusic1, 1.0, 0.1);
-global.soundVolumeMusic2 = lerp(global.soundVolumeMusic2, 1.0, 0.1);
-global.soundVolumeMusic3 = lerp(global.soundVolumeMusic3, 1.0, 0.1);
+global.soundVolumeMusic2 = lerp(global.soundVolumeMusic2, 0.0, 0.1);
+global.soundVolumeMusic3 = lerp(global.soundVolumeMusic3, 0.0, 0.1);
 
 if (!transition)
 {

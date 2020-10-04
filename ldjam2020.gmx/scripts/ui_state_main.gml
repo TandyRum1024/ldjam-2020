@@ -18,6 +18,13 @@ var _subtext_scale = 2 * UI_SCALE;
 ui_draw_text(SCREEN_CX, _subtext_y + _subtext_scale, _subtext, _subtext_scale, c_black, 1.0);
 ui_draw_text(SCREEN_CX, _subtext_y, _subtext, _subtext_scale, c_ltgray, 1.0);
 
+var _subtext       = "MMXX ZIK#MADE IN 18<= HOURS FOR LUDUM DARE COMPO 2020";
+var _subtext_y     = SCREEN_H - 16 * UI_SCALE;
+var _subtext_scale = 2 * UI_SCALE;
+draw_set_align(1, 2);
+ui_draw_text(SCREEN_CX, _subtext_y + _subtext_scale, _subtext, _subtext_scale, c_black, 1.0);
+ui_draw_text(SCREEN_CX, _subtext_y, _subtext, _subtext_scale, c_ltgray, 1.0);
+
 #define ui_state_ingame_intermission
 /// oUI::ui_state_ingame_intermission
 var _text       = "<ENTER> : BEGIN";

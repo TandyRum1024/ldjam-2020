@@ -1,4 +1,4 @@
-// 2020-10-05 05:15:39
+// 2020-10-05 06:37:08
 #define ui_state_main
 /// oUI::ui_state_main
 
@@ -8,6 +8,7 @@ var _text       = "AD#NJOHHOSJNSLSZAM";
 var _text_y     = SCREEN_CY;
 var _text_scale = 4 * UI_SCALE;
 
+draw_set_align(1, 1);
 ui_draw_text(SCREEN_CX, _text_y + _text_scale, _text, _text_scale, c_black, 1.0);
 ui_draw_text(SCREEN_CX, _text_y, _text, _text_scale, c_white, 1.0);
 
