@@ -1,0 +1,85 @@
+// 2020-10-04 21:44:52
+#event properties (no comments/etc. here are saved)
+parent_index = -1;
+uses_physics = false;
+
+#event create Mpa handler
+singleton_check();
+
+// Room data
+roomData = ds_grid_create(1, 1);
+roomDataRaw = undefined;
+roomTileW = 0;
+roomTileH = 0;
+
+roomUnit = 32;
+roomW = 1;
+roomH = 1;
+
+roomTargetNum = 0;
+roomReady = false;
+
+#event destroy Destroy
+if (singletonInit)
+{
+    ds_grid_destroy(roomData);
+}
+
+
+#event other_user0 Load random map
+// Destroy all entity
+instance_destroy(oGameEntity);
+instance_destroy(oTile);
+instance_destroy(oTileFloor);
+
+// Fetch random room
+roomDataRaw = global.roomDataRoomList[| irandom_range(0, ds_list_size(global.roomDataRoomList)-1)]; // roomDataRaw now contains a list of string
+
+// Start building room from a list of string
+if (roomDataRaw != undefined)
+{
+    roomTileW = string_length(roomDataRaw[| 0]);
+    roomTileH = ds_list_size(roomDataRaw);
+    roomW = roomTileW * TILE_UNIT;
+    roomH = roomTileH * TILE_UNIT;
+    
+    ds_grid_resize(roomData, roomTileW, roomTileH);
+    
+    for (var _y=0; _y<roomTileH; _y++)
+    {
+        var _line = roomDataRaw[| _y];
+        for (var _x=0; _x<roomTileW; _x++)
+        {
+            var _char = string_char_at(_line, _x + 1);
+            var _tile = ds_map_fetch_or_not(global.roomDataTileLUT, _char, eTILE.NONE);
+            
+            roomData[# _x, _y] = _tile;
+            
+            // Spawn tile
+            var _tile_obj = global.tileToObject[? _tile];
+            if (_tile_obj != undefined)
+            {
+                var _tile_x = _x * TILE_UNIT, _tile_y = _y * TILE_UNIT;
+                instance_create(_tile_x, _tile_y, _tile_obj);
+            }
+        }
+    }
+    
+    // Update room view & surface
+    game_update_views();
+    
+    // Calculate target number
+    roomTargetNum = instance_number(oTileTarget);
+    roomReady = true;
+}
+
+#event other_user1 Active instances
+with (oTile)
+{
+    event_user(0);
+}
+with (oTileFloor)
+{
+    event_user(0);
+}
+

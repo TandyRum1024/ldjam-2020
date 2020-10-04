@@ -1,0 +1,6 @@
+// 2020-10-04 21:59:07
+#event properties (no comments/etc. here are saved)
+parent_index = oTile;
+sprite_index = sprTileTarget;
+mask_index = maskTile;
+uses_physics = false;

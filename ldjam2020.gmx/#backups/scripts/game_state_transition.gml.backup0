@@ -1,0 +1,9 @@
+// 2020-10-05 06:35:20
+/// game_state_transition
+with (oKNT)
+{
+    transition = true;
+    transitionFadeout = true;
+    transitionDest = argument0;
+    transitionFrames = 0;
+}

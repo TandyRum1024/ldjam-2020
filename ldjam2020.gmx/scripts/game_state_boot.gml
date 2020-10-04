@@ -1,0 +1,76 @@
+#define game_state_boot
+/// oKNT::game_state_boot
+if (fsmStateInit)
+{
+    
+}
+
+if (room != rm_game)
+{
+    // Move to real room
+    room_goto(rm_game);
+}
+else
+{
+    fsm_switch("title");
+}
+
+#define game_state_title
+/// oKNT::game_state_title
+if (fsmStateInit)
+{
+    ui_set("title");
+    
+    global.soundVolumeMusic1 = 0.0;
+    global.soundVolumeMusic2 = 0.0;
+    global.soundVolumeMusic3 = 0.0;
+}
+
+/// Update dynamic music
+global.soundVolumeMusic1 = lerp(global.soundVolumeMusic1, 1.0, 0.1);
+global.soundVolumeMusic2 = lerp(global.soundVolumeMusic2, 1.0, 0.1);
+global.soundVolumeMusic3 = lerp(global.soundVolumeMusic3, 1.0, 0.1);
+
+if (!transition)
+{
+    if (inputActionPress)
+    {
+        game_state_transition("gameplay");
+    }
+}
+
+#define game_state_gameplay
+/// oKNT::game_state_gameplay
+if (fsmStateInit)
+{
+    // Spawn game handler
+    instance_create(0, 0, oGameKNT);
+    
+    // Set game state to intermission
+    with (oGameKNT)
+    {
+        fsm_switch("setup");
+    }
+    
+    // Spawn map handler
+    instance_create(0, 0, oMap);
+
+    // Enable infinite room visuals
+    drawRoomSurfaces = true;
+    
+    with (oGameKNT)
+    {
+        fsm_update();
+    }
+    
+    // Update room view & surface
+    // game_update_views();
+}
+
+#define game_state_gameplay_cleanup
+/// oKNT::game_state_gameplay_cleanup
+instance_destroy(oMap);
+instance_destroy(oGameEntity);
+instance_destroy(oTile);
+instance_destroy(oTileFloor);
+drawRoomSurfaces = false;

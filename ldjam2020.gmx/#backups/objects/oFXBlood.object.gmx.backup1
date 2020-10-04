@@ -1,0 +1,37 @@
+// 2020-10-05 03:57:08
+#event properties (no comments/etc. here are saved)
+parent_index = -1;
+sprite_index = sprFXBlood;
+uses_physics = false;
+
+#event create
+image_angle = random(360);
+image_xscale = random_range(0.8, 0.9);
+image_yscale = random_range(0.8, 0.9);
+image_speed = 0;
+
+depth = -3;
+
+#event step
+image_xscale = lerp(image_xscale, 1.2, 0.05);
+image_yscale = lerp(image_yscale, 1.2, 0.05);
+
+
+#event draw
+var _x = floor(x);
+var _y = floor(y);
+var _xs = image_xscale;
+var _ys = image_yscale;
+
+// Draw sprite(s)
+draw_sprite_ext(sprite_index, image_index, _x, _y, _xs, _ys, image_angle, image_blend, image_alpha);
+
+var _room_w = oMap.roomW, _room_h = oMap.roomH;
+if (_x > _room_w * 0.5) // draw at left
+    draw_sprite_ext(sprite_index, image_index, _x - _room_w, _y, _xs, _ys, image_angle, image_blend, image_alpha); // L
+else // draw at right
+    draw_sprite_ext(sprite_index, image_index, _x + _room_w, _y, _xs, _ys, image_angle, image_blend, image_alpha); // R
+if (_y > _room_h * 0.5) // draw at top
+    draw_sprite_ext(sprite_index, image_index, _x, _y - _room_h, _xs, _ys, image_angle, image_blend, image_alpha); // U
+else // draw at bottom
+    draw_sprite_ext(sprite_index, image_index, _x, _y + _room_h, _xs, _ys, image_angle, image_blend, image_alpha); // D

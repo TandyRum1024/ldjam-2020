@@ -1,0 +1,48 @@
+// 2020-10-05 03:58:49
+#event properties (no comments/etc. here are saved)
+parent_index = -1;
+sprite_index = sprFXParticle;
+uses_physics = false;
+
+#event create
+z = 0;
+
+vx = 0;
+vy = 0;
+vz = 0;
+
+life = room_speed * 5;
+image_angle = random(360);
+
+
+#event step Update position
+entity_update_pos();
+z += vz;
+
+if (z >= 0)
+{
+    z = 0;
+    vz *= -0.75;
+}
+vx *= 0.8;
+vy *= 0.8;
+
+if (vz <= 0.01)
+{
+    vz = 0;
+}
+
+if (life > 0)
+{
+    life--;
+}
+else
+{
+    instance_destroy(id);
+}
+image_alpha = calc_interp(life, room_speed, 3.0, 1.0);
+
+
+#event draw
+draw_sprite_ext(sprite_index, image_index, x + image_xscale, y + image_yscale, image_xscale, image_yscale, image_angle, c_black, image_alpha);
+draw_self();

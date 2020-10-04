@@ -1,0 +1,36 @@
+// 2020-10-04 23:15:00
+#event properties (no comments/etc. here are saved)
+parent_index = oGameEntity;
+sprite_index = sprBulletWarning;
+uses_physics = false;
+
+#event create
+image_xscale = max(oMap.roomW, oMap.roomH);
+image_yscale = TILE_UNIT_HALF;
+image_alpha  = 0.0;
+
+frames = room_speed;
+
+depth = -1;
+
+#event step
+
+// Update bullet spawner logic
+if (frames > 0)
+{
+    frames--;
+}
+else
+{
+    instance_destroy(id);
+    var _inst = instance_create(x, y, oBullet);
+    with (_inst)
+    {
+        moveDir = other.image_angle;
+        event_user(0);
+    }
+}
+
+// Update visuals
+image_alpha = 1.0 - calc_interp(frames, room_speed, 3.0, 2.0);
+image_yscale = TILE_UNIT_HALF * calc_interp(frames, room_speed, 3.0, 2.0);

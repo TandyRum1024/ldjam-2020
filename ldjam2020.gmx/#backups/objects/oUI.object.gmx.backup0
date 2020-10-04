@@ -1,0 +1,64 @@
+// 2020-10-05 05:14:42
+#event properties (no comments/etc. here are saved)
+parent_index = -1;
+persistent = true;
+uses_physics = false;
+
+#event create UI
+singleton_check();
+
+fsm_init();
+fsm_add_state("title", ui_state_title);
+fsm_add_state("ingame_intermission", ui_state_ingame_intermission);
+fsm_add_state("ingame_intermission_results", ui_state_ingame_intermission_results);
+fsm_add_state("ingame_bullet_spawn", ui_state_ingame_bullet_spawn);
+fsm_add_state("ingame_bullet_survive", ui_state_ingame_bullet_survive);
+fsm_add_state("ingame_gameover", ui_state_ingame_gameover);
+
+
+SCREEN_W  = window_get_width();
+SCREEN_H  = window_get_height();
+SCREEN_CX = SCREEN_W >> 1;
+SCREEN_CY = SCREEN_H >> 1;
+SCREEN_TARGET_W = SCREEN_W;
+SCREEN_TARGET_H = SCREEN_H;
+UI_SCALE = 1;
+
+msg = "";
+msgFrames = 0; // room_speed * 3.0;
+
+draw_set_font(fntGame);
+
+#event step Update screen res
+var _ww = window_get_width();
+var _wh = window_get_height();
+if ((_ww != SCREEN_W || _wh != SCREEN_H) && 
+    _ww != 0 && _wh != 0)
+{
+    SCREEN_W  = _ww;
+    SCREEN_H  = _wh;
+    SCREEN_CX = SCREEN_W >> 1;
+    SCREEN_CY = SCREEN_H >> 1;
+    
+    UI_SCALE = clamp(SCREEN_W / SCREEN_TARGET_W, 1, SCREEN_H / SCREEN_TARGET_H);
+}
+
+#event draw_gui UI
+// Text distortion fix
+d3d_set_projection_ortho(0, 0, SCREEN_W, SCREEN_H, 0);
+
+// Draw UI
+fsm_update();
+
+// Draw message?
+if (msgFrames > 0)
+{
+    var _alpha = calc_interp(msgFrames, room_speed, 2.0, 2.0);
+    var _scale = 4.0 * UI_SCALE;
+    
+    draw_set_align(1, 1);
+    ui_draw_text(SCREEN_CX, SCREEN_CY * 0.5 + _scale, msg, _scale, c_black, _alpha);
+    ui_draw_text(SCREEN_CX, SCREEN_CY * 0.5, msg, _scale, $00DDFF, _alpha);
+    
+    msgFrames--;
+}

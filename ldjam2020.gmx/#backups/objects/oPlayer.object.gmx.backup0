@@ -1,0 +1,105 @@
+// 2020-10-05 04:48:15
+#event properties (no comments/etc. here are saved)
+parent_index = oGameEntity;
+sprite_index = sprPlayer;
+mask_index = maskPlayer;
+uses_physics = false;
+
+#event create Player
+event_inherited();
+#section Stuffs
+// Physics
+vx = 0;
+vy = 0;
+
+// Movement
+moveVelMax = 6;
+moveVelAcc = 1;
+moveVelDamp = 0.7;
+moveDir = 0;
+moveFacingH = 1;
+
+// Input
+inputH = 0;
+inputV = 0;
+inputAction      = false;
+inputActionPress = false;
+inputActionRel   = false;
+
+// ETC
+parryDist = TILE_UNIT * 2;
+parryBoost = 0;
+parryInst = noone;
+parryCtr       = 0;
+parryCtrMax    = 15;
+parryCtrMaxHit = 30;
+
+hp = 3;
+iframes = room_speed;
+iframesMax = room_speed;
+
+// FSM
+fsm_init();
+fsm_add_state("normal", player_state_normal);
+fsm_switch("normal");
+
+// Anim
+anim_init();
+anim_define("idle", player_anim_idle);
+anim_define("move", player_anim_move);
+anim_define("parry", player_anim_parry);
+anim_fire("idle");
+animator.BUF_CTR = 0;
+animator.BUF_SND_PLAYED = false;
+animator.BUF_SND_CTR = 0;
+animator.sprite_index = sprPlayer;
+
+#event step FSM
+fsm_update();
+
+#event step_end ANIM
+// Update animation
+with (animator)
+{
+    event_user(0);
+}
+
+#event draw Draw at all four sides of room
+var _x = floor(x + animator.x);
+var _y = floor(y + animator.y);
+var _angle = image_angle + animator.image_angle;
+var _spr = animator.sprite_index, _ind = animator.image_index;
+var _alpha = image_alpha * (((fsmStateCtr >> 1) & 1) || iframes <= 0);
+var _xs = animator.image_xscale, _ys = animator.image_yscale;
+var _sx = _xs * 2, _sy = _ys * 2;
+
+// Draw direction
+var _xo = lengthdir_x(parryDist, moveDir);
+var _yo = lengthdir_y(parryDist, moveDir);
+draw_arrow(_x, _y, _x + _xo, _y + _yo, TILE_UNIT_HALF);
+
+// Draw sprite(s)
+draw_sprite_ext(_spr, _ind, _x + _sx, _y + _sy, _xs, _ys, _angle, c_black, _alpha); // shadow
+draw_sprite_ext(_spr, _ind, _x, _y, _xs, _ys, _angle, image_blend, _alpha);
+
+var _room_w = oMap.roomW, _room_h = oMap.roomH;
+if (_x > _room_w * 0.5) // draw at left
+{
+    draw_sprite_ext(_spr, _ind, _x - _room_w + _sx, _y + _sy, _xs, _ys, _angle, c_black, _alpha); // L shadow
+    draw_sprite_ext(_spr, _ind, _x - _room_w, _y, _xs, _ys, _angle, image_blend, _alpha); // L
+}
+else // draw at right
+{
+    draw_sprite_ext(_spr, _ind, _x + _room_w + _sx, _y + _sy, _xs, _ys, _angle, c_black, _alpha); // R shadow
+    draw_sprite_ext(_spr, _ind, _x + _room_w, _y, _xs, _ys, _angle, image_blend, _alpha); // R
+}
+if (_y > _room_h * 0.5) // draw at top
+{
+    draw_sprite_ext(_spr, _ind, _x + _sx, _y - _room_h + _sy, _xs, _ys, _angle, c_black, _alpha); // U
+    draw_sprite_ext(_spr, _ind, _x, _y - _room_h, _xs, _ys, _angle, image_blend, _alpha); // U
+}
+else // draw at bottom
+{
+    draw_sprite_ext(_spr, _ind, _x + _sx, _y + _room_h + _sy, _xs, _ys, _angle, c_black, _alpha); // D
+    draw_sprite_ext(_spr, _ind, _x, _y + _room_h, _xs, _ys, _angle, image_blend, _alpha); // D
+}

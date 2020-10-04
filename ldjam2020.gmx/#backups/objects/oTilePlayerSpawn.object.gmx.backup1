@@ -1,0 +1,13 @@
+// 2020-10-04 16:29:49
+#event properties (no comments/etc. here are saved)
+parent_index = oTileFloor;
+sprite_index = sprTileFloor;
+uses_physics = false;
+
+#event create Remove mask
+event_inherited();
+mask_index = -1;
+
+#event other_user0 Update depth & activate
+depth = 0;
+instance_create(x + TILE_UNIT * 0.5, y + TILE_UNIT * 0.5, oPlayer);

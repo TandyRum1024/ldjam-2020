@@ -1,0 +1,11 @@
+// 2020-10-04 22:50:10
+#event properties (no comments/etc. here are saved)
+parent_index = -1;
+sprite_index = sprBulletTrail;
+uses_physics = false;
+
+#event create
+image_speed = 0.125;
+
+#event other_animation_end
+instance_destroy(id);

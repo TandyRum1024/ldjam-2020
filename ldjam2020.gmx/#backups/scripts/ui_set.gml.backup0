@@ -1,0 +1,6 @@
+// 2020-10-04 17:16:53
+/// ui_set(UIState)
+with (oUI)
+{
+    fsm_switch(argument0);
+}

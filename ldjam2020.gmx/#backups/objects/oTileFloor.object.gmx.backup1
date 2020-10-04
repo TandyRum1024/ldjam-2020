@@ -1,0 +1,9 @@
+// 2020-10-04 16:32:17
+#event properties (no comments/etc. here are saved)
+parent_index = oTile;
+sprite_index = sprTileFloor;
+uses_physics = false;
+mask_index = maskNone;
+
+#event other_user0 Update depth
+depth = 0;

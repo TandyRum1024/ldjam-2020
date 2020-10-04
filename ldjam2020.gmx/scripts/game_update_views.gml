@@ -1,0 +1,9 @@
+/// game_update_views
+// Update room view & surface
+view_enabled[0] = true;
+view_wview[0] = oMap.roomW;
+view_hview[0] = oMap.roomH;
+view_wport[0] = oMap.roomW;
+view_hport[0] = oMap.roomH;
+view_surface_id[0] = oKNT.surfRoom;
+surface_resize(application_surface, oMap.roomW, oMap.roomH);

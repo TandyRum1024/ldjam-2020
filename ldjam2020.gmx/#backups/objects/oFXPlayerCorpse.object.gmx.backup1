@@ -1,0 +1,36 @@
+// 2020-10-05 03:57:08
+#event properties (no comments/etc. here are saved)
+parent_index = oGameEntity;
+sprite_index = sprPlayer;
+uses_physics = false;
+
+#event create
+vx = 0;
+vy = 0;
+
+sprite_index = sprPlayer;
+image_index = irandom_range(5, 7);
+image_speed = 0;
+
+rotSide = choose(-1, 1);
+
+t = 0;
+
+#event step
+entity_update_pos();
+
+var _speed = point_distance(0, 0, vx, vy);
+image_angle += _speed * 0.25 * rotSide;
+
+vx *= 0.95;
+vy *= 0.95;
+
+// create blood splatter
+if (t < room_speed * 5)
+{
+    if (t % 4) // every 4 frames
+    {
+        instance_create(x, y, oFXBlood);
+    }
+}
+t++;

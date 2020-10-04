@@ -1,0 +1,9 @@
+// 2020-10-05 03:48:16
+#event properties (no comments/etc. here are saved)
+parent_index = oGameEntity;
+sprite_index = sprTile;
+mask_index = maskTile;
+uses_physics = false;
+
+#event other_user0 Update depth
+depth = -10;

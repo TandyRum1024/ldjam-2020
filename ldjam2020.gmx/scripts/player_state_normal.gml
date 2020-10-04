@@ -1,0 +1,144 @@
+/// oPlayer::player_state_normal
+// Check input
+inputH = oKNT.inputH;
+inputV = oKNT.inputV;
+inputAction      = oKNT.inputAction;
+inputActionPress = oKNT.inputActionPress;
+inputActionRel   = oKNT.inputActionRel;
+
+// Movement
+var _move_h = sign(inputH);
+var _move_v = sign(inputV);
+
+if (_move_h != 0 || _move_v != 0)
+{
+    moveDir = point_direction(0, 0, _move_h, _move_v);
+}
+
+if (_move_h != 0)
+{
+    var _vel = _move_h * vx;
+    var _accel = min(moveVelMax - _vel, moveVelAcc);
+    vx += _accel * _move_h;
+    
+    moveFacingH = _move_h;
+}
+else
+{
+    vx *= moveVelDamp;
+}
+if (_move_v != 0)
+{
+    var _vel = _move_v * vy;
+    var _accel = min(moveVelMax - _vel, moveVelAcc);
+    vy += _accel * _move_v;
+}
+else
+{
+    vy *= moveVelDamp;
+}
+
+// Update position
+entity_update_pos();
+
+// Parry
+if (parryCtr <= 0 && inputActionPress)
+{
+    // Check if there's any bullets in range
+    parryInst = instance_create(x, y - 16, oTriggerParry);
+    parryInst.image_angle = moveDir;
+    parryInst.radius      = parryDist;
+    parryInst.strength    = parryBoost;
+    parryInst.depth       = -10 - y;
+    
+    // Determine cooldown
+    var _bullet_hit = false;
+    with (parryInst)
+    {
+        if (entity_place_meeting(x, y, oBullet))
+            _bullet_hit = true;
+    }
+    
+    if (_bullet_hit)
+        parryCtr = parryCtrMaxHit;
+    else
+        parryCtr = parryCtrMax;
+    
+    // force play the animation
+    animator.fsmStateCurrent = "default";
+    anim_fire("parry");
+}
+else if (parryCtr > 0)
+{
+    parryCtr--;
+}
+
+if (instance_exists(parryInst))
+{
+    parryInst.x = x;
+    parryInst.y = y - 16;
+    parryInst.image_angle = moveDir;
+}
+else
+{
+    parryInst = noone;
+}
+
+// Check for bullet collision
+//if (place_meeting(x, y, oBullet))
+if (iframes > 0)
+{
+    iframes--;
+}
+else
+{
+    with (oBullet)
+    {
+        if (lethal && entity_instance_place(x, y, other))
+        {
+            // ouch
+            other.hp--;
+            other.iframes = other.iframesMax;
+            if (other.hp <= 0)
+            {
+                // spawn corpse
+                var _fx = instance_create(other.x, other.y, oFXPlayerCorpse);
+                _fx.vx = other.vx - lengthdir_x(random_range(4, 8), other.moveDir);
+                _fx.vy = other.vy - lengthdir_y(random_range(4, 8), other.moveDir);
+                _fx.image_angle = point_direction(0, 0, _fx.vx, _fx.vy) - 90;
+                
+                // play sound
+                sfx_play(choose(fxDead1, fxDead2), 1.0, random_range(0.9, 1.1));
+                
+                instance_destroy(other);
+            }
+            else
+            {
+                // play fx
+                var _fx = instance_create(other.x, other.y, oFXAnimation);
+                _fx.sprite_index = sprFXHurt;
+                _fx.image_xscale = 3;
+                _fx.image_yscale = 3;
+                _fx.depth = -20;
+                
+                repeat (irandom_range(4, 8))
+                {
+                    var _fx = instance_create(other.x, other.y, oFXDust);
+                    _fx.image_blend = make_colour_hsv(240, random_range(200, 255), random_range(230, 255));
+                    _fx.image_xscale = 2;
+                    _fx.image_yscale = 2;
+                    _fx.vx = random_range(-6, 6);
+                    _fx.vy = random_range(-6, 6);
+                    _fx.vz = random_range(-8, -4);
+                    _fx.x += random_range(-8, 8);
+                    _fx.y += random_range(-8, 8);
+                    _fx.z = random_range(-2, -30);
+                    _fx.depth = -20;
+                }
+                
+                // play sound
+                sfx_play(choose(fxPlayerHurt1, fxPlayerHurt2), 1.0, random_range(0.8, 1.2));
+            }
+        }
+    }
+}
